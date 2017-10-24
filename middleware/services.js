@@ -46,8 +46,9 @@ const services = module.exports = (input, root = process.cwd()) => {
     });
     return { route, args };
   }
-  const respond = (res, data) => {
+  const respond = (res, next, data) => {
     res.body = data;
+    next();
     /*
     res
       .status(200)
@@ -63,7 +64,7 @@ const services = module.exports = (input, root = process.cwd()) => {
       if(!route) return next();//next(new HttpError(404, 'Endpoint not found.'));
       Promise
         .resolve(route.handler(...args))
-        .then(respond.bind(null, res))
+        .then(respond.bind(null, res, next))
         .catch(next);
     }
   }
@@ -84,7 +85,7 @@ const services = module.exports = (input, root = process.cwd()) => {
       if(!route) return next();//next(new HttpError(404, 'Endpoint not found.'));
       return Promise
         .resolve(route.handler(...args))
-        .then(respond.bind(null, res))
+        .then(respond.bind(null, res, next))
         .catch(next);
     }).catch(next);
   }
