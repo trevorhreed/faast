@@ -1,0 +1,21 @@
+{
+  "name": "faast",
+  "version": "0.2.0",
+  "description": "A fast FaaS web framework",
+  "main": "index.js",
+  "author": "Trevor Reed",
+  "keywords": [
+    "FaaS",
+    "web",
+    "framework"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trevorhreed/faast"
+  },
+  "dependencies": {
+    "chokidar": "^1.7.0",
+    "fast-glob": "^1.0.1",
+    "jsonwebtoken": "^8.1.0"
+  }
+}
