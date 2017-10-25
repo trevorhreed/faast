@@ -4,7 +4,7 @@ const { getFuncArgs } = require('./utils.js');
 const fastGlob = require('fast-glob');
 const chokidar = require('chokidar');
 
-const ANNOTATION_REGEX = /^ *('|"|`)@endpoint (GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) ([^ ]+)( \((.+)\))?\1;? *$/m;
+const ANNOTATION_REGEX = /^ *('|"|`)@endpoint (GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS) ([^ ]+)( \((.+)\))?\1;? *$/gm;
 const GLOB_OPTIONS = { onlyFiles: true, bashNative: [] };
 const WATCH_OPTIONS = { ignoreInitial: true };
 
@@ -91,20 +91,21 @@ const extractEndpoints = (...params) => {
     Object.keys(service.module).forEach((name)=>{
       const handler = service.module[name];
       const code = handler.toString();
-      const annotation = ANNOTATION_REGEX.exec(code);
-      if(!annotation) return;
-      const filename = service.filename;
-      const key = `${filename}:${name}`;
-      const [,,method,url,,args] = annotation;
-      const {regex, params} = parsePath(url);
-      const prefix = getPrefix(url, ':?');
-      endpoints[key] = {
-        key, filename,
-        handler,
-        name, method, url, prefix, regex,
-        urlParamKeys: params,
-        fnArgKeys: args ? args.split(/, /g) : getFuncArgs(handler)
-      };
+      let match;
+      while(match = ANNOTATION_REGEX.exec(code)){
+        const filename = service.filename;
+        const key = `${filename}:${name}`;
+        const [,,method,url,,args] = match;
+        const {regex, params} = parsePath(url);
+        const prefix = getPrefix(url, ':?');
+        endpoints[key] = {
+          key, filename,
+          handler,
+          name, method, url, prefix, regex,
+          urlParamKeys: params,
+          fnArgKeys: args ? args.split(/, /g) : getFuncArgs(handler)
+        };
+      }
     });
   });
   return endpoints;
