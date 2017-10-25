@@ -1,4 +1,4 @@
-const { fromJson, HttpError } = require('../utils.js');
+const { fromJson, HttpError, AppError } = require('../utils.js');
 
 const read = module.exports.read = () => {
   return (req, res, next) => {
