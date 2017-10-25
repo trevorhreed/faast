@@ -65,18 +65,23 @@ const getStack = (e) => {
 
 const AppError = module.exports.AppError = function(...params){
   if(params[0] instanceof AppError) return params[0];
+  this.code = 0;
+  this.name = 'AppError';
   if(params[0] instanceof Error){ // (err[, inner])
     this.name = params[0].name;
     this.message = params[0].message;
     this.stack = getStack(params[0]);
     this.inner = params[1];
+  }else if(typeof params[0] === 'number'){ // (code[, message[, detail]])
+    this.code = params[0];
+    this.message = params[1];
+    this.detail = params[2];
+    this.stack = getStack();
   }else if(typeof params[0] === 'string'){ // (message[, detail])
-    this.name = 'AppError';
     this.message = params[0];
     this.detail = params[1];
     this.stack = getStack();
   }else{
-    this.name = 'AppError';
     this.message = params[0];
     this.detail = params;
     this.stack = getStack();

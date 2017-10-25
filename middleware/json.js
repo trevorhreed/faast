@@ -11,6 +11,7 @@ const write = module.exports.write = () => {
   return (req, res, next) => {
     res.set('content-type', 'application/json');
     try{
+      if(!res.body) res.status(204);
       res.send(JSON.stringify(res.body));
     }catch(e){
       res
@@ -20,9 +21,16 @@ const write = module.exports.write = () => {
   }
 }
 
-const errors = module.exports.errors = () => {
+const errors = module.exports.errors = (mappings) => {
+  let mappingFn;
+  if(typeof mappings === 'function') mappingFn = mappings;
+  else if(mappings && typeof mappings === 'object') mappingFn = x => mappings[x];
   return (err, req, res, next) => {
-    if(!(err instanceof HttpError)) err = new HttpError(err);
+    if(!(err instanceof HttpError)){
+      const code = err instanceof AppError ? err.code : 500;
+      err = new HttpError(err);
+      if(mappingFn) err.code = mappingFn(code);
+    }
     res
       .status(err.code)
       .set('content-type', 'application/json')
