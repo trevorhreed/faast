@@ -1,6 +1,6 @@
 {
   "name": "faast",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A fast FaaS web framework",
   "main": "index.js",
   "author": "Trevor Reed",

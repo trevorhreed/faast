@@ -93,9 +93,9 @@ const extractEndpoints = (...params) => {
       const code = handler.toString();
       let match;
       while(match = ANNOTATION_REGEX.exec(code)){
-        const filename = service.filename;
-        const key = `${filename}:${name}`;
         const [,,method,url,,args] = match;
+        const filename = service.filename;
+        const key = `${filename}:${name}:${url}`;
         const {regex, params} = parsePath(url);
         const prefix = getPrefix(url, ':?');
         endpoints[key] = {
