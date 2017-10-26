@@ -12,10 +12,11 @@ module.exports = (options = {}) => {
   const { glob, root = process.cwd(), output, watch = false } = options;
   if(!glob || !output) throw new Error(`Invalid parameters to faast.build:\n\n${JSON.stringify(options, null, 2)}\n\n`);
 
+  const outputPath = path.resolve(output);
   const cache = {};
   const boundImportFiles = importFiles.bind(null, root);
   const boundExtractEndpoints = extractEndpoints.bind(null, cache);
-  const boundWriteRegistry = writeRegistry.bind(null, output);
+  const boundWriteRegistry = writeRegistry.bind(null, outputPath);
 
   const initPromise = fastGlob(glob, GLOB_OPTIONS)
     .then(boundImportFiles)
@@ -72,10 +73,11 @@ module.exports.getRegistryFromGlob = (glob, root = process.cwd()) => {
 }
 
 const importFiles = (root, filenames) => {
+  root = path.resolve(root);
   if(!Array.isArray(filenames)) filenames = [filenames];
   return filenames.map((filename)=>{
     const relative = path.relative(root, filename);
-    const absolute = path.resolve(relative);
+    const absolute = path.resolve(filename);
     delete require.cache[require.resolve(absolute)];
     return {
       filename: relative,
