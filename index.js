@@ -51,6 +51,7 @@ module.exports.AppError = AppError;
 module.exports.HttpError = HttpError;
 
 const matchRoute = (path, fn, err, requestPath) => {
+  requestPath = requestPath || '';
   let baseUrl = '';
   let isPathMatch = false;
   if(path instanceof RegExp){

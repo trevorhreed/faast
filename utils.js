@@ -108,7 +108,7 @@ const HttpError = module.exports.HttpError = function(...params){
   if(params[0] instanceof Error || params[0] instanceof AppError){ // (err[, inner])
     this.code = 500;
     this.type = HTTP_STATUS_MESSAGES[this.code] || 'Unknown Http Status';
-    this.name = params[0].name;
+    this.name = `HttpError (${params[0].name})`;
     this.message = params[0].message || 'Unknown Error';
     this.stack = getStack(params[0]);
     this.inner = params[1];
