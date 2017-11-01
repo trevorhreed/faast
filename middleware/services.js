@@ -47,54 +47,19 @@ const services = module.exports = (input, root = process.cwd()) => {
     return { route, args };
   }
   const respond = (res, next, data) => {
-    console.log('here/f');
     res.body = data;
-    console.log('here/g');
     next();
-    console.log('here/h');
   }
   if(input.endsWith('.json')){
     if(input[0] !== '/') input = path.join(root, input);
     const registry = require(input);
     return (req, res, next) => {
-      console.log('here/a');
       const { route, args } = getRoute(registry, req) || {};
-      console.log('here/b');
       if(!route) return next();//next(new HttpError(404, 'Endpoint not found.'));
-      console.log('here/c');
-      let value;
-      try{
-        value = route.handler(...args);
-        value.then((thing)=>{
-          console.dir(thing);
-        });
-        console.log('here/d');
-      }catch(e){
-        console.log(`We've had a problem, not a promise.`);
-        console.error(err);
-        if(err && typeof err === 'object'){
-          console.log(err.message);
-          console.log(err.stack);
-        }
-      }
-      Promise.resolve(value)
-        .then((data)=>{
-          console.log('here/e');
-          return data;
-        })
+      Promise.resolve()
+        .then(x => route.handler(...args))
         .then(respond.bind(null, res, next))
-        .then(()=>{
-          console.log('here/i');
-        })
-        .catch((err)=>{
-          console.log(`We've had a problem.`);
-          console.error(err);
-          if(err && typeof err === 'object'){
-            console.log(err.message);
-            console.log(err.stack);
-          }
-          next(err);
-        });
+        .catch(next);
     }
   }
   /*
