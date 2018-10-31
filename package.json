@@ -14,7 +14,7 @@
     "url": "https://github.com/trevorhreed/faast"
   },
   "dependencies": {
-    "chokidar": "^1.7.0",
+    "chokidar": "^2.0.4",
     "fast-glob": "^2.2.3",
     "jsonwebtoken": "^8.1.0"
   }
