@@ -1,0 +1,13 @@
+{
+  "name": "faast-node",
+  "version": "0.1.0",
+  "description": "An example of using Faast with Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "faast": "file:../.."
+  }
+}
